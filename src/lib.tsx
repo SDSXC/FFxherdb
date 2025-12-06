@@ -8,7 +8,7 @@ export function encodepwd(s:string,base:number,p:number):number{
     }
     return ret;
 }
-function decode(a:Array<number>,p1:number,p2:number,p:number):string{
+export function decode(a:Array<number>,p1:number,p2:number,p:number):string{
     var ret:string="";
     var b:Array<number>=[];
     var len:number=a.length;
@@ -24,7 +24,7 @@ function decode(a:Array<number>,p1:number,p2:number,p:number):string{
     }
     return ret;
 }
-function encode(s:string,p1:number,p2:number,p:number):Array<number>{
+export function encode(s:string,p1:number,p2:number,p:number):Array<number>{
     var a:Array<number>=[];
     var len:number=s.length;
     var lst:number=0;
@@ -38,8 +38,8 @@ function encode(s:string,p1:number,p2:number,p:number):Array<number>{
 }
 
 // 开发环境下临时暴露到全局，便于调试
-if (typeof window !== 'undefined') {
-    (window as any).encodepwd = encodepwd;
-    (window as any).decode = decode;
-    (window as any).encode = encode;
-}
+// if (typeof window !== 'undefined') {
+//     (window as any).encodepwd = encodepwd;
+//     (window as any).decode = decode;
+//     (window as any).encode = encode;
+// }

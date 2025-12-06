@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import './lib.tsx'
-import Password from './Password.tsx';
-import PersonCard from './PersonCard.tsx';
+import { useState, useEffect } from 'react';
+import {encodepwd,encode,decode} from './lib.tsx'
+import Password from './Password.jsx';
+import PersonCard from './PersonCard.jsx';
 import './App.css';
-import TagFilter from './TagFilter.tsx';
+import TagFilter from './TagFilter.jsx';
 
 function App() {
   const [encryptedData, setEncryptedData] = useState(null);
@@ -21,7 +21,7 @@ function App() {
         const data=await response.json();
         setEncryptedData(data);
       } catch (err) {
-        setError(`加载数据失败: ${err.message}`);
+        setError(`加载数据失败`);
       } finally {
         setIsLoading(false);
       }
@@ -39,10 +39,10 @@ function App() {
         throw new Error('数据未加载完成');
       }
       var data=encryptedData;
-      var n:number=data.id.length;
-      var p1:number=encodepwd(password,131,998244353);
-      var p2:number=encodepwd(password,137,998244353);
-      var p:number=998244353;
+      var n=data.id.length;
+      var p1=encodepwd(password,131,998244353);
+      var p2=encodepwd(password,137,998244353);
+      var p=998244353;
       console.log(n,p1,p2,p);
       for(var i=0;i<n;i++){
         data.id[i]=decode(data.id[i],p1,p2,p);
@@ -51,7 +51,7 @@ function App() {
       for(var i=0;i<n;i++){
         data.item[i].name=decode(data.item[i].name,p1,p2,p);
         data.item[i].idcard=decode(data.item[i].idcard,p1,p2,p);
-        var m:number=data.item[i].tags.length;
+        var m=data.item[i].tags.length;
         for(var j=0;j<m;j++){
           data.item[i].tags[j]=data.id[data.item[i].tags[j]];
         }
@@ -62,7 +62,7 @@ function App() {
       setIsDecrypted(true);
       sessionStorage.setItem('decrypted', 'true');
     } catch (err) {
-      setError(err.message || '解密失败');
+      setError('解密失败');
       throw err;
     } finally {
       setIsLoading(false);
