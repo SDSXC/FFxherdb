@@ -1,0 +1,69 @@
+.person-card {
+  background: white;
+  border-radius: 10px;
+  padding: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eee;
+  transition: transform 0.2s, box-shadow 0.2s;
+  height: 20%;
+  flex-direction: column;
+}
+
+.person-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.person-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.person-name {
+  font-size: 1.3rem;
+  width:12%;
+  color: #333;
+  margin: 0;
+}
+.person-id {
+  font-size: 1.3rem;
+  color: #333;
+  width:15%;
+  margin: 0;
+}
+.person-idcard {
+  font-size: 1.3rem;
+  color: #333;
+  width:25%;
+  margin: 0;
+}
+.person-tag {
+  width:5%;
+  font-size: 1.3rem;
+  color: #333;
+  margin: 0;
+}
+
+.tags-container {
+  width:43%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+}
+
+.tag {
+  background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+  color: #667eea;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #667eea40;
+  transition: all 0.2s;
+}
+
+.tag:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  cursor: default;
+}
