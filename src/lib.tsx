@@ -36,7 +36,6 @@ export function encode(s:string,p1:number,p2:number,p:number):Array<number>{
     a.push(((-p1*lst-p2)%p+p)%p)
     return a;
 }
-
 // 开发环境下临时暴露到全局，便于调试
 // if (typeof window !== 'undefined') {
 //     (window as any).encodepwd = encodepwd;

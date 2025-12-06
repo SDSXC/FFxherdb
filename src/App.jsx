@@ -4,7 +4,28 @@ import Password from './Password.jsx';
 import PersonCard from './PersonCard.jsx';
 import './App.css';
 import TagFilter from './TagFilter.jsx';
-
+import './SHA256.jsx';
+import SHA256 from './SHA256.jsx';
+const sha256ofpwd="67ccbf6d-f24ce3a-960842e-29f93103-42857363-15990b72-68dfa5c7-2fe5d93e"
+function decrypt(data,password){
+  var n=data.id.length;
+  var p1=encodepwd(password,131,998244353);
+  var p2=encodepwd(password,137,998244353);
+  var p=998244353;
+  for(var i=0;i<n;i++){
+    data.id[i]=decode(data.id[i],p1,p2,p);
+  }
+  n=data.item.length;
+  for(var i=0;i<n;i++){
+    data.item[i].name=decode(data.item[i].name,p1,p2,p);
+    data.item[i].idcard=decode(data.item[i].idcard,p1,p2,p);
+    var m=data.item[i].tags.length;
+    for(var j=0;j<m;j++){
+      data.item[i].tags[j]=data.id[data.item[i].tags[j]];
+    }
+  }
+  return data.item;
+}
 function App() {
   const [encryptedData, setEncryptedData] = useState(null);
   const [decryptedData, setDecryptedData] = useState([]);
@@ -16,9 +37,9 @@ function App() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await fetch('/data.json');
+        var response = await fetch('/data.json');
         if (!response.ok) throw new Error('无法加载数据文件');
-        const data=await response.json();
+        var data=await response.json();
         setEncryptedData(data);
       } catch (err) {
         setError(`加载数据失败`);
@@ -38,27 +59,30 @@ function App() {
       if (!encryptedData) {
         throw new Error('数据未加载完成');
       }
-      var data=encryptedData;
-      var n=data.id.length;
-      var p1=encodepwd(password,131,998244353);
-      var p2=encodepwd(password,137,998244353);
-      var p=998244353;
-      console.log(n,p1,p2,p);
-      for(var i=0;i<n;i++){
-        data.id[i]=decode(data.id[i],p1,p2,p);
-      }
-      n=data.item.length;
-      for(var i=0;i<n;i++){
-        data.item[i].name=decode(data.item[i].name,p1,p2,p);
-        data.item[i].idcard=decode(data.item[i].idcard,p1,p2,p);
-        var m=data.item[i].tags.length;
-        for(var j=0;j<m;j++){
-          data.item[i].tags[j]=data.id[data.item[i].tags[j]];
+      const sha256 = new SHA256();
+      if(sha256.hash(password)==sha256ofpwd){
+        try {
+          await setIsDecrypted(false);
+          var response = await fetch('/exdata.json');
+          if (!response.ok) throw new Error('无法加载数据文件');
+          var dt=await response.json();
+          console.log(dt);
+          setEncryptedData(dt);
+          var t=decrypt(dt,password);
+          console.log(dt,password,t);
+          setDecryptedData(t);
+          setFilteredData(t);
+          setIsDecrypted(true);
+          return;
+        } catch (err) {
+          setError(`加载数据失败`);
+        } finally {
+          setIsLoading(false);
         }
       }
-      console.log(p1,p2,p);
-      setDecryptedData(data.item);
-      setFilteredData(data.item);
+      var t=decrypt(encryptedData,password);
+      setDecryptedData(t);
+      setFilteredData(t);
       setIsDecrypted(true);
       sessionStorage.setItem('decrypted', 'true');
     } catch (err) {
